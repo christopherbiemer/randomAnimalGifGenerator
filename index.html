@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Gif Generator 5000</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container">
+	<div class="col-md-12" id="button-view"></div>
+
+	<div class="col-md-8" id="gifview"></div>
+
+	<form class="col-md-4" id="animal-form">
+		<label for="gif-input">Add an animal</h3>
+		<input class="col-md-12" id="gif-input"><br>
+		<input class="btn btn-primary" id="add-animal" type="submit" value="Submit">
+	</form>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+	<script>
+
+		//setting the initial array of gif buttons
+		var gifButtons = ["cat", "dog", "rabbit", "hedgehog", "parrot"];
+
+		var a;
+		var stillURL;
+		var imageURL;
+
+		function gifGenerator() {
+			$("#gifview").html("");
+			var animal = $(this).attr("data-name");
+			var queryURL = "https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=" + animal
+			for (var i = 0; i<10; i++) {
+				$.ajax({
+					url: queryURL,
+					method: "GET"
+				})
+
+				.done(function(response) {
+
+					console.log(response);
+
+					stillURL = response.data.image_original_url;
+
+					var newImage = $("<img>");
+
+					newImage.attr("src", stillURL);
+					newImage.attr("data-still", stillURL);
+					newImage.attr("data-animate", stillURL);
+					newImage.attr("data-state", "still");
+					newImage.attr("alt", animal + " image");
+					newImage.attr("class", "gifwindow");
+					$("#gifview").append(newImage);
+				})
+			}
+			
+		}
+
+		//displays the buttons in the array
+		function renderButtons() {
+			//empties out the button-view
+			$("#button-view").empty();
+			//rotates through the array
+			for (var i = 0; i<gifButtons.length; i++) {
+				//sets a button tag to a variable
+				var a = $("<button>");
+				//adds classes
+				a.addClass("animal btn btn-info text-center");
+				//adds a data name
+				a.attr("data-name", gifButtons[i]);
+				//adds text to the gif buttons
+				a.text(gifButtons[i]);
+				//appends each button to the button-view display div at the top of the page
+				$("#button-view").append(a);
+			}
+		}
+
+		//when the user clicks on submit
+		$("#add-animal").on("click", function(event) {
+			//prevents refreshing the page
+			event.preventDefault();
+			//sets the user input to a variable
+			var newAnimal = $("#gif-input").val().trim();
+			//if the user inputs nothing, do not add a new button
+			if (newAnimal === "") {
+				//run the function without pushing blank string to the gifButtons array
+				renderButtons();
+			}
+			//if the user inputs something
+			else{
+				//push the user input into the gifButtons array
+				gifButtons.push(newAnimal);
+				//render the new set of buttons
+				renderButtons();
+			}
+		})
+
+		//click listener for animal button clicks
+		$(document).on("click", ".animal", gifGenerator);
+
+		$("#gifview").on("click", function() {
+			var state = $(this).attr("data-state");
+			console.log(state);
+			if (state === "still") {
+				$(this).attr("src", $(this).attr("data-animate"));
+				$(this).attr("data-state", "animate");
+			}
+			else {
+				$(this).attr("src", $(this).attr("data-still"));
+				$(this).attr("data-state", "still");
+			}
+		})
+
+		//displays the initial set of buttons
+		renderButtons();
+
+	</script>
+</div>
+
+</body>
+</html>
