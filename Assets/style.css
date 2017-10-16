@@ -1,0 +1,27 @@
+body {
+	background-image: url(wormz.png);
+}
+
+img {
+	width: 200px;
+	height: 200px;
+}
+
+label {
+	font-size: 25px;
+	margin-bottom: 0px;
+	color: rgb(133,195,220);
+}
+
+h3 {
+	color: rgb(133,195,220);
+}
+
+button {
+	margin-top: 5px;
+	margin-left: 5px;
+}
+
+input {
+	margin-top: 5px;
+}

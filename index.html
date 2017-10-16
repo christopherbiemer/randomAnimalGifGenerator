@@ -3,17 +3,18 @@
 <head>
 	<title>Gif Generator 5000</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="Assets/style.css">
 </head>
 <body>
 
-<div class="container">
-	<div class="col-md-12" id="button-view"></div>
+<div class="container-fluid">
+	<div class="col-md-12 col-sm-12 col-xs-12" id="button-view"></div>
 
-	<div class="col-md-8" id="gifview"></div>
+	<div class="col-md-8 col-sm-8 col-xs-12" id="gifview"></div>
 
-	<form class="col-md-4" id="animal-form">
-		<label for="gif-input">Add an animal</h3>
-		<input class="col-md-12" id="gif-input"><br>
+	<form class="col-md-4 col-sm-4 col-xs-12" id="animal-form">
+		<label for="gif-input">Add An Animal</label>
+		<input class="col-md-12 col-sm-12 col-xs-12" id="gif-input"><br>
 		<input class="btn btn-primary" id="add-animal" type="submit" value="Submit">
 	</form>
 
@@ -24,37 +25,43 @@
 		//setting the initial array of gif buttons
 		var gifButtons = ["cat", "dog", "rabbit", "hedgehog", "parrot"];
 
-		var a;
 		var stillURL;
 		var imageURL;
+		var rating;
 
 		function gifGenerator() {
 			$("#gifview").html("");
 			var animal = $(this).attr("data-name");
-			var queryURL = "https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=" + animal
-			for (var i = 0; i<10; i++) {
-				$.ajax({
-					url: queryURL,
-					method: "GET"
-				})
+			var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + animal + "&api_key=dc6zaTOxFJmzC&limit=10"
+			$.ajax({
+				url: queryURL,
+				method: "GET"
+			})
 
-				.done(function(response) {
-
-					console.log(response);
-
-					stillURL = response.data.image_original_url;
-
-					var newImage = $("<img>");
-
-					newImage.attr("src", stillURL);
-					newImage.attr("data-still", stillURL);
-					newImage.attr("data-animate", stillURL);
-					newImage.attr("data-state", "still");
-					newImage.attr("alt", animal + " image");
-					newImage.attr("class", "gifwindow");
-					$("#gifview").append(newImage);
-				})
-			}
+			.done(function(response) {
+				console.log(response);
+				for (var i = 0; i<10; i++) {
+					stillURL = response.data[i].images.original_still.url;
+					console.log(stillURL);
+					imageURL = response.data[i].images.original.url;
+					console.log(imageURL);
+					rating = response.data[i].rating;
+					var b = $("<div>");
+					b.attr("class", "col-md-4 col-sm-4 col-xs-12 gifplayer");
+					var c = $("<h3>");
+					c.attr("class", "text-center col-md-12 col-sm-12 col-xs-12");
+					c.append("Rating: " + rating);
+					var a = $("<img>");
+					a.attr("src", stillURL);
+					a.attr("data-still", stillURL);
+					a.attr("data-animate", imageURL);
+					a.attr("data-state", "still");
+					a.attr("class", "gif col-md-12 col-sm-12 col-xs-12");
+					b.append(c);
+					b.append(a);
+					$("#gifview").append(b);
+				}
+			})
 			
 		}
 
@@ -89,7 +96,7 @@
 				renderButtons();
 			}
 			//if the user inputs something
-			else{
+			else {
 				//push the user input into the gifButtons array
 				gifButtons.push(newAnimal);
 				//render the new set of buttons
@@ -100,7 +107,7 @@
 		//click listener for animal button clicks
 		$(document).on("click", ".animal", gifGenerator);
 
-		$("#gifview").on("click", function() {
+		$(document).on("click", ".gif", function() {
 			var state = $(this).attr("data-state");
 			console.log(state);
 			if (state === "still") {
