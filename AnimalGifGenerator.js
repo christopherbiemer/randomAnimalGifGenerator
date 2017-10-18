@@ -14,7 +14,7 @@ function gifGenerator() {
 	//determines which animal button the user clicked and asigns the animal name to a variable
 	var animal = $(this).attr("data-name");
 	//search query URL that pulls 10 items associated with the animal button the user clicks
-	var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + animal + "&api_key=dc6zaTOxFJmzC&limit=10"
+	var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + animal + "&api_key=dc6zaTOxFJmzC&limit=10&rating=pg-13"
 	//performs an AJAX call
 	$.ajax({
 		url: queryURL,
