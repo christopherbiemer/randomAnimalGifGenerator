@@ -78,7 +78,7 @@ function renderButtons() {
 		//adds corresponding text to the gif buttons
 		animalButton.text(gifButtons[i]);
 		//appends each button to the button-view display div at the top of the page
-		$("#button-view").append(a);
+		$("#button-view").append(animalButton);
 	}
 }
 
